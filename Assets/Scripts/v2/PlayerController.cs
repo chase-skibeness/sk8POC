@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SkateboardController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     private float timeSinceLastPush = 0f;
     private Vector2 lastStickPosition = Vector2.zero;
@@ -19,16 +19,12 @@ public class SkateboardController : MonoBehaviour
     public float pushSpeed = 500f;
     public float rotationSpeed = 5f;
     public float pushCooldown = 0.7f;
-    public float maxSpeed = 100f;
-    private Vector3 respawnPosition;
-    private bool isDead = false;
 
     public Rigidbody2D rb;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        respawnPosition = transform.position;
     }
 
     private void Update()
@@ -55,14 +51,13 @@ public class SkateboardController : MonoBehaviour
                 PerformOllie();
             }
 
-            if (currentStickDirection != 0 && currentStickDirection == lastStickDirection)
-            {
-                FlipSkateboard(currentStickDirection);
-            }
+
 
             if (Gamepad.current.leftStick.left.isPressed)
             {
                 rb.AddTorque(rotationSpeed * Time.deltaTime, ForceMode2D.Impulse);
+
+
             }
 
             if (Gamepad.current.leftStick.right.isPressed)
@@ -88,29 +83,31 @@ public class SkateboardController : MonoBehaviour
                 lastFlickTime = Time.time;
             }
         }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-
-        if (collision.gameObject.CompareTag("Ground"))
+        else
         {
-            if (rb.velocity.magnitude > maxSpeed && !isDead)
+            if (Keyboard.current.aKey.isPressed)
             {
-                StartCoroutine(DieAndRespawn());
+                rb.AddTorque(rotationSpeed * Time.deltaTime, ForceMode2D.Impulse);
+                if (Keyboard.current.dKey.wasReleasedThisFrame)
+                {
+                    PerformOllie();
+                }
+            }
+
+            if (Keyboard.current.dKey.isPressed)
+            {
+                rb.AddTorque(-rotationSpeed * Time.deltaTime, ForceMode2D.Impulse);
+                if (Keyboard.current.aKey.wasReleasedThisFrame)
+                {
+                    PerformOllie();
+                }
+            }
+
+            if (Keyboard.current.spaceKey.wasReleasedThisFrame)
+            {
+                PushSkateboardForward();
             }
         }
-        
-    }
-
-    private IEnumerator DieAndRespawn()
-    {
-        isDead = true;
-
-        yield return new WaitForSeconds(2);
-
-        transform.position = respawnPosition;
-        isDead = false;
     }
 
     public void WheelTouchesGround()
@@ -143,31 +140,10 @@ public class SkateboardController : MonoBehaviour
         // Add a cooldown to prevent spamming the push.
         if (Time.time - timeSinceLastPush >= pushCooldown && isGrounded)
         {
-            // Use the right direction instead of forward.
-            Vector2 pushDirection = new Vector2(transform.right.x, transform.right.y);
+            Vector2 pushDirection = new Vector2(transform.right.x, transform.right.y); // Use the right direction instead of forward.
+            rb.AddForce(pushDirection * pushSpeed, ForceMode2D.Force);
 
-            // Determine the skateboard's current facing direction
-            int skateboardDirection = transform.localScale.x > 0 ? 1 : -1;
-
-            rb.AddForce(pushDirection * pushSpeed * skateboardDirection, ForceMode2D.Force);
             timeSinceLastPush = Time.time;
-        }
-    }
-
-    private void FlipSkateboard(int direction)
-    {
-        // Flip the skateboard to face the given direction.
-        Vector3 currentScale = transform.localScale;
-
-        if (direction > 0)
-        {
-            // Facing right
-            transform.localScale = new Vector3(Mathf.Abs(currentScale.x), currentScale.y, currentScale.z);
-        }
-        else if (direction < 0)
-        {
-            // Facing left
-            transform.localScale = new Vector3(-Mathf.Abs(currentScale.x), currentScale.y, currentScale.z);
         }
     }
 }

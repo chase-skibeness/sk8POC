@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class WheelController : MonoBehaviour
+public class v1WheelController : MonoBehaviour
 {
-    public SkateboardController skateboardController;
-    public PlayerController playerController;
+    public v1SkateboardController skateboardController;
+    public v1PlayerController playerController;
 
     private Rigidbody2D rb;
 

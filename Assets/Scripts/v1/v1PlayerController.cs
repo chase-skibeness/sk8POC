@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class v1PlayerController : MonoBehaviour
 {
 
     private Vector3 respawnPosition;
