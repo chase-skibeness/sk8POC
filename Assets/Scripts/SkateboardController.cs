@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,10 +10,13 @@ public class SkateboardController : MonoBehaviour
     private Vector2 lastStickPosition = Vector2.zero;
     private float lastFlickTime = 0f;
     private float flickTimeWindow = 0.15f; // The time window for the flick action.
+    private float flickTimeDeadzone = 0.03f;
     private float joystickThreshold = 0.5f; // The joystick movement threshold for registering a flick.
     private int lastStickDirection = 0;
     private bool isGrounded = false;
     private int numWheelsTouchingGround = 0;
+    private int orientation = 1;
+    public SpriteRenderer[] spriteRenderers;
 
     public float ollieTimerThreshold = 0.8f;
     public float ollieForce = 500f;
@@ -51,18 +55,33 @@ public class SkateboardController : MonoBehaviour
                PerformOllie();
             }
 
-
+            // Check if stick was flicked to the right or left.
+            if (currentStickDirection != 0 && currentStickDirection == lastStickDirection && Time.time - lastFlickTime < flickTimeWindow && Time.time - lastFlickTime > flickTimeDeadzone)
+            {
+                orientation *= -1;
+                foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = !spriteRenderer.flipX; }
+            }
 
             if (Gamepad.current.leftStick.left.isPressed)
             {
                 rb.AddTorque(rotationSpeed * Time.deltaTime, ForceMode2D.Impulse);
-                
-                
             }
 
             if (Gamepad.current.leftStick.right.isPressed)
             {
                 rb.AddTorque(-rotationSpeed * Time.deltaTime, ForceMode2D.Impulse);
+            }
+
+            if (Gamepad.current.leftShoulder.isPressed)
+            {
+                orientation = -1;
+                foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = true; }
+            }
+
+            if (Gamepad.current.rightShoulder.isPressed)
+            {
+                orientation = 1;
+                foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = false; }
             }
 
             if (Gamepad.current.aButton.wasReleasedThisFrame)
@@ -140,7 +159,7 @@ public class SkateboardController : MonoBehaviour
         // Add a cooldown to prevent spamming the push.
         if (Time.time - timeSinceLastPush >= pushCooldown && isGrounded)
         {
-            Vector2 pushDirection = new Vector2(transform.right.x, transform.right.y); // Use the right direction instead of forward.
+            Vector2 pushDirection = new Vector2(orientation * transform.right.x, orientation * transform.right.y); // Use the right direction instead of forward.
             rb.AddForce(pushDirection * pushSpeed, ForceMode2D.Force);
 
             timeSinceLastPush = Time.time;
