@@ -58,8 +58,13 @@ public class SkateboardController : MonoBehaviour
             // Check if stick was flicked to the right or left.
             if (currentStickDirection != 0 && currentStickDirection == lastStickDirection && Time.time - lastFlickTime < flickTimeWindow && Time.time - lastFlickTime > flickTimeDeadzone)
             {
-                orientation *= -1;
-                foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = !spriteRenderer.flipX; }
+                if (orientation != currentStickDirection)
+                {
+                    foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = !spriteRenderer.flipX; }
+                    orientation = currentStickDirection;
+                }
+                
+                
             }
 
             if (Gamepad.current.leftStick.left.isPressed)
