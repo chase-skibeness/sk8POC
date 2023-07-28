@@ -17,6 +17,7 @@ public class SkateboardController : MonoBehaviour
     private int numWheelsTouchingGround = 0;
     private int orientation = 1;
     public SpriteRenderer[] spriteRenderers;
+    public GameObject Wizard;
 
     public float ollieTimerThreshold = 0.8f;
     public float ollieForce = 500f;
@@ -80,12 +81,14 @@ public class SkateboardController : MonoBehaviour
             if (Gamepad.current.leftShoulder.isPressed)
             {
                 orientation = -1;
+                Wizard.transform.localScale = new Vector3(1, -1, 1);
                 foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = true; }
             }
 
             if (Gamepad.current.rightShoulder.isPressed)
             {
                 orientation = 1;
+                Wizard.transform.localScale = new Vector3(1, 1, 1);
                 foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = false; }
             }
 
