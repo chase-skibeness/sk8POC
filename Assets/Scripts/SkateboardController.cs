@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,6 +19,7 @@ public class SkateboardController : MonoBehaviour
     private int orientation = 1;
     public SpriteRenderer[] spriteRenderers;
     public GameObject Wizard;
+    public Animator playerAnimationController;
 
     public float ollieTimerThreshold = 0.8f;
     public float ollieForce = 500f;
@@ -34,6 +36,7 @@ public class SkateboardController : MonoBehaviour
 
     private void Update()
     {
+        playerAnimationController.SetFloat("Speed", rb.velocity.magnitude);
 
         if (Gamepad.current != null)
         {
@@ -158,6 +161,7 @@ public class SkateboardController : MonoBehaviour
     {
         if (IsGrounded())
         {
+            playerAnimationController.SetTrigger("OlliePerformed");
             rb.AddForce(new Vector2(0, ollieForce), ForceMode2D.Force);
         }
     }
@@ -167,6 +171,7 @@ public class SkateboardController : MonoBehaviour
         // Add a cooldown to prevent spamming the push.
         if (Time.time - timeSinceLastPush >= pushCooldown && isGrounded)
         {
+            playerAnimationController.SetTrigger("PushPressed");
             Vector2 pushDirection = new Vector2(orientation * transform.right.x, orientation * transform.right.y); // Use the right direction instead of forward.
             rb.AddForce(pushDirection * pushSpeed, ForceMode2D.Force);
 

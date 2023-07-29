@@ -510,6 +510,7 @@ MonoBehaviour:
   - {fileID: 7836832681777917082}
   - {fileID: 7836832683014595129}
   Wizard: {fileID: 4393120269413788121}
+  playerAnimationController: {fileID: 4393120269413788120}
   ollieTimerThreshold: 0.8
   ollieForce: 1000
   pushSpeed: 750
@@ -965,6 +966,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebea5f8b8163f9a4ab9d9a1b45444e28, type: 3}
+--- !u!95 &4393120269413788120 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4105362945620786468, guid: ebea5f8b8163f9a4ab9d9a1b45444e28, type: 3}
+  m_PrefabInstance: {fileID: 292261473378178300}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4393120269413788121 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4105362945620786469, guid: ebea5f8b8163f9a4ab9d9a1b45444e28, type: 3}
@@ -1032,7 +1038,7 @@ FixedJoint2D:
   serializedVersion: 4
   m_EnableCollision: 0
   m_ConnectedRigidBody: {fileID: 7836832683670504977}
-  m_BreakForce: Infinity
+  m_BreakForce: 500
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
