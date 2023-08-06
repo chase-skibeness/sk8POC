@@ -15,8 +15,8 @@ public class CharacterController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            skateboardAttachment.enabled = false;
             uiController.isGameOver = true;
+            skateboardAttachment.enabled = false;
         }
     }
 }
