@@ -106,9 +106,9 @@ public class SkateboardController : MonoBehaviour
                 PushSkateboardForward();
             }
 
-            if (Gamepad.current.bButton.wasReleasedThisFrame)
+            if (Gamepad.current.xButton.wasReleasedThisFrame)
             {
-                PerformOllie();
+                PerformKickflip();
             }
 
             // Update the last stick position and direction.
@@ -169,6 +169,15 @@ public class SkateboardController : MonoBehaviour
         {
             playerAnimationController.SetTrigger("OlliePerformed");
             rb.AddForce(new Vector2(0, ollieForce), ForceMode2D.Force);
+        }
+    }
+
+    private void PerformKickflip()
+    {
+        if (!IsGrounded())
+        {
+            Debug.Log("kickflip performed");
+            playerAnimationController.SetTrigger("KickflipPerformed");
         }
     }
 
