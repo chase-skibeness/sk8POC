@@ -64,6 +64,13 @@ public class SkateboardController : MonoBehaviour
                 if (orientation != currentStickDirection)
                 {
                     foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = !spriteRenderer.flipX; }
+                    if (currentStickDirection < 0)
+                    {
+                        Wizard.transform.localScale = new Vector3(-0.7f, 0.7f, 1);
+                    } else
+                    {
+                        Wizard.transform.localScale = new Vector3(0.7f, 0.7f, 1);
+                    }
                     orientation = currentStickDirection;
                 }
                 
@@ -80,17 +87,17 @@ public class SkateboardController : MonoBehaviour
                 rb.AddTorque(-rotationSpeed * Time.deltaTime, ForceMode2D.Impulse);
             }
 
-            if (Gamepad.current.leftShoulder.isPressed)
+            if (Gamepad.current.leftShoulder.isPressed || Keyboard.current.qKey.isPressed)
             {
                 orientation = -1;
-                Wizard.transform.localScale = new Vector3(1, -1, 1);
+                Wizard.transform.localScale = new Vector3(-0.7f, 0.7f, 1);
                 foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = true; }
             }
 
-            if (Gamepad.current.rightShoulder.isPressed)
+            if (Gamepad.current.rightShoulder.isPressed || Keyboard.current.eKey.isPressed)
             {
                 orientation = 1;
-                Wizard.transform.localScale = new Vector3(1, 1, 1);
+                Wizard.transform.localScale = new Vector3(0.7f, 0.7f, 1);
                 foreach (SpriteRenderer spriteRenderer in spriteRenderers) { spriteRenderer.flipX = false; }
             }
 

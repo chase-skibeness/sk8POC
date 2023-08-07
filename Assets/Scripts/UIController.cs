@@ -15,25 +15,28 @@ public class UIController : MonoBehaviour
     {
         //Disables panel if active
         gameOverPanel.SetActive(false);
-        restartText.gameObject.SetActive(false);
+        restartText.SetActive(false);
     }
 
     void Update()
     {
-        if ((Gamepad.current.startButton.isPressed || Keyboard.current.rKey.isPressed) && !isGameOver)
+        if (Gamepad.current != null)
         {
-            isGameOver = true;
-
-            StartCoroutine(GameOverSequence());
-        }
-
-        if (isGameOver)
-        {   
-            StartCoroutine(GameOverSequence());
-
-            if (Keyboard.current.rKey.isPressed || Gamepad.current.startButton.isPressed)
+            if ((Gamepad.current.startButton.isPressed || Keyboard.current.rKey.isPressed) && !isGameOver)
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                isGameOver = true;
+
+                StartCoroutine(GameOverSequence());
+            }
+
+            if (isGameOver)
+            {
+                StartCoroutine(GameOverSequence());
+
+                if (Keyboard.current.rKey.isPressed || Gamepad.current.startButton.isPressed)
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                }
             }
         }
     }
